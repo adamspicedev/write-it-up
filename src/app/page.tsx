@@ -1,10 +1,12 @@
-import { Button } from "@/components/ui/button";
+import AuthButtons from "@/components/auth/auth-buttons";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
-export default function Home() {
+export default async function Home() {
+  const { getUser } = getKindeServerSession();
+  const session = await getUser();
   return (
-    <div>
-      <h1>Hello World</h1>
-      <Button>Click me</Button>
+    <div className="flex gap-4 p-8">
+      <AuthButtons user={session} />
     </div>
   );
 }
