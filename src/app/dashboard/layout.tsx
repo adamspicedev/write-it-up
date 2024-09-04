@@ -1,6 +1,15 @@
 import NavLink from "@/components/dashboard/nav-link";
 import { ThemeToggle } from "@/components/dashboard/theme-toggle";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { navLinks } from "@/lib/data";
+import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import { CircleUser } from "lucide-react";
 import Link from "next/link";
 
 interface DashboardLayoutProps {
@@ -32,8 +41,24 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <header className="bg-muted/40 flex h-14 items-center gap-4 border-b px-4 lg:h-[60px] lg:px-6">
           <div className="ml-auto flex items-center gap-x-5">
             <ThemeToggle />
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="secondary" className="rounded-full">
+                  <CircleUser className="size-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem asChild>
+                  <LogoutLink>Log out</LogoutLink>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </header>
+        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
+          {children}
+        </main>
       </div>
     </section>
   );
