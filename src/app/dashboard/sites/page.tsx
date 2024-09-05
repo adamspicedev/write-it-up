@@ -1,9 +1,31 @@
+import { EmptyState } from "@/components/dashboard/empty-state";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import prisma from "@/lib/db";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { Site } from "@prisma/client";
 import { FileIcon, PlusCircle } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-const SitesPage = () => {
+const getData = async (userId: string) =>
+  await prisma.site.findMany({
+    where: { userId: userId },
+    orderBy: { createdAt: "desc" },
+  });
+
+const SitesPage = async () => {
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+  const data: Site[] = await getData(user.id);
+
   return (
     <>
       <div className="flex w-full justify-end">
@@ -14,21 +36,39 @@ const SitesPage = () => {
         </Button>
       </div>
 
-      <div className="animate-in fade-in-50 flex flex-col items-center justify-center rounded-md border border-dashed p-8 text-center">
-        <div className="bg-primary/10 flex size-20 items-center justify-center rounded-full">
-          <FileIcon className="text-primary size-10" />
+      {!data ? (
+        <EmptyState
+          title="You don't have any Sites created"
+          description="You haven't set a site up yet. Get started by creating a new site."
+          buttonText="Create Site"
+          href="/dashboard/sites/new"
+        />
+      ) : (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10">
+          {data.map((site) => (
+            <Card key={site.id}>
+              <Image
+                src={site.imageUrl ?? "/default.png"}
+                alt={site.name}
+                className="h-[200px] w-full rounded-t-lg object-cover"
+                width={400}
+                height={200}
+              />
+              <CardHeader>
+                <CardTitle>{site.name}</CardTitle>
+                <CardDescription>{site.description}</CardDescription>
+              </CardHeader>
+              <CardFooter>
+                <Button asChild className="w-full">
+                  <Link href={`/dashboard/sites/${site.id}`}>
+                    View Articles
+                  </Link>
+                </Button>
+              </CardFooter>
+            </Card>
+          ))}
         </div>
-        <h2 className="mt-6 text-xl font-semibold">No sites found</h2>
-        <p className="text-muted-foreground mb-8 mt-2 text-center text-sm leading-tight">
-          Create one to get started
-        </p>
-        <Button asChild size="lg">
-          <Link href="/dashboard/sites/new">
-            <PlusCircle className="mr-2 size-8" />
-            <span className="text-lg">Create Site</span>
-          </Link>
-        </Button>
-      </div>
+      )}
     </>
   );
 };

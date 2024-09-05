@@ -13,7 +13,6 @@ interface AuthButtonProps {
 }
 
 const AuthButtons = ({ user }: AuthButtonProps) => {
-  console.log(user);
   return (
     <div>
       {!user ? (
