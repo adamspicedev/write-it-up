@@ -10,7 +10,7 @@ export async function GET(
   { params }: SiteArticleRequestParams,
 ) {
   try {
-    const { apiKey, articleId } = params;
+    const { apiKey, slug } = params;
 
     if (!apiKey) {
       return Response.json({
@@ -19,10 +19,10 @@ export async function GET(
       });
     }
 
-    if (!articleId) {
+    if (!slug) {
       return Response.json({
         status: 400,
-        body: { error: "Missing article ID" },
+        body: { error: "Missing article slug" },
       });
     }
     const res = await prisma.site.findUnique({
@@ -34,7 +34,7 @@ export async function GET(
 
     return Response.json({
       status: 200,
-      body: res?.articles.filter((article) => article.id === articleId),
+      body: res?.articles.filter((article) => article.slug === slug),
     });
   } catch (error) {
     console.error("Error fetching articles:", error);
