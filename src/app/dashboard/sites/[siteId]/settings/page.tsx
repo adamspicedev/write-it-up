@@ -1,18 +1,57 @@
 import { deleteSiteAction } from "@/actions/site-actions";
-import UploadImageForm from "@/components/dashboard/upload-image-form";
+import { requireUser } from "@/app/require-user";
 import SubmitButton from "@/components/dashboard/submit-button";
+import UploadImageForm from "@/components/dashboard/upload-image-form";
 import { Button } from "@/components/ui/button";
 import {
   Card,
+  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import prisma from "@/lib/db";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
+import ApiKeyCopy from "@/components/dashboard/api-key-copy";
 
-const SettingsSitePage = ({ params }: { params: { siteId: string } }) => {
+const getData = async (userId: string, siteId: string) => {
+  const data = await prisma.site.findUnique({
+    where: {
+      id: siteId,
+      userId: userId,
+    },
+    select: {
+      user: {
+        select: {
+          Subscription: true,
+        },
+      },
+      apiKey: true,
+      subdirectory: true,
+      articles: {
+        select: {
+          imageUrl: true,
+          title: true,
+          createdAt: true,
+          id: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+    },
+  });
+
+  return data;
+};
+
+const SettingsSitePage = async ({ params }: { params: { siteId: string } }) => {
+  const user = await requireUser();
+
+  const data = await getData(user.id, params.siteId);
+
   return (
     <>
       <div className="flex items-center gap-x-2">
@@ -23,6 +62,21 @@ const SettingsSitePage = ({ params }: { params: { siteId: string } }) => {
         </Button>
         <h3 className="text-xl font-semibold">Go back</h3>
       </div>
+
+      {data?.subdirectory === "spiceydev" || data?.user.Subscription ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>API Key</CardTitle>
+            <CardDescription>
+              This is your unique API key. Use this key to authenticate with the
+              API
+            </CardDescription>
+            <CardContent>
+              <ApiKeyCopy apiKey={data.apiKey ?? ""} />
+            </CardContent>
+          </CardHeader>
+        </Card>
+      ) : null}
 
       <UploadImageForm siteId={params.siteId} />
 

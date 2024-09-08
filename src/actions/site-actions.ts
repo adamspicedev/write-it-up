@@ -1,11 +1,11 @@
 "use server";
 
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { redirect } from "next/navigation";
-import { parseWithZod } from "@conform-to/zod";
-import { siteSchema } from "@/lib/schemas";
-import prisma from "@/lib/db";
 import { requireUser } from "@/app/require-user";
+import prisma from "@/lib/db";
+import { siteSchema } from "@/lib/schemas";
+import { randomUUID } from "@/lib/utils";
+import { parseWithZod } from "@conform-to/zod";
+import { redirect } from "next/navigation";
 
 export const createSiteAction = async (_: any, formData: FormData) => {
   const user = await requireUser();
@@ -20,6 +20,7 @@ export const createSiteAction = async (_: any, formData: FormData) => {
       description: submission.value.description,
       name: submission.value.name,
       subdirectory: submission.value.subdirectory,
+      apiKey: randomUUID(),
       userId: user.id,
     },
   });
