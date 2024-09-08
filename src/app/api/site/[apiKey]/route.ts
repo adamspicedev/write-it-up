@@ -1,12 +1,12 @@
 import prisma from "@/lib/db";
-import { NextApiRequest } from "next";
+import { NextRequest } from "next/server";
 
 interface SiteArticleRequestParams {
   params: { apiKey: string };
 }
 
 export async function GET(
-  req: NextApiRequest,
+  req: NextRequest,
   { params }: SiteArticleRequestParams,
 ) {
   try {
