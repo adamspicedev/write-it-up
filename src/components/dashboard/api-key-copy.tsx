@@ -1,9 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import CopyToClipboard from "react-copy-to-clipboard";
-import { Badge } from "../ui/badge";
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
+import { Badge } from "../ui/badge";
 
 const ApiKeyCopy = ({ apiKey }: { apiKey: string }) => {
   const { isCopied, copyToClipboard } = useCopyToClipboard();
