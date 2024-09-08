@@ -15,6 +15,7 @@ import prisma from "@/lib/db";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import ApiKeyCopy from "@/components/dashboard/api-key-copy";
+import { Role } from "@prisma/client";
 
 const getData = async (userId: string, siteId: string) => {
   const data = await prisma.site.findUnique({
@@ -25,7 +26,8 @@ const getData = async (userId: string, siteId: string) => {
     select: {
       user: {
         select: {
-          Subscription: true,
+          subscription: true,
+          role: true,
         },
       },
       apiKey: true,
@@ -63,7 +65,7 @@ const SettingsSitePage = async ({ params }: { params: { siteId: string } }) => {
         <h3 className="text-xl font-semibold">Go back</h3>
       </div>
 
-      {data?.subdirectory === "spiceydev" || data?.user.Subscription ? (
+      {data?.user.role === Role.ADMIN || data?.user.subscription ? (
         <Card>
           <CardHeader>
             <CardTitle>API Key</CardTitle>
