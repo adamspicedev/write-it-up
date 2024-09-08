@@ -24,7 +24,7 @@ export async function GET() {
       },
     });
   }
-˝
+
   return NextResponse.redirect(
     `${process.env.NODE_ENV === "production" ? process.env.PRODUCTION_URL : process.env.DEVELOPMENT_URL}/dashboard`,
   );
