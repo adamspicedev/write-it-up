@@ -66,9 +66,9 @@ export default async function SlugRoute({
         <Image
           src={data.imageUrl}
           alt={data.title}
-          width={1200}
-          height={630}
-          className="h-full w-full object-cover"
+          width={200}
+          height={50}
+          className="h-full w-full object-contain"
           priority
         />
       </div>

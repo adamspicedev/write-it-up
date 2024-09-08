@@ -80,42 +80,46 @@ const DashboardPage = async () => {
         />
       )}
 
-      <h1 className="mb-5 mt-10 text-2xl font-semibold">Recent Articles</h1>
       {articles.length > 0 ? (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-7">
-          {articles.map((item) => (
-            <Card key={item.id}>
-              <Image
-                src={item.imageUrl ?? "/default.png"}
-                alt={item.title}
-                className="h-[200px] w-full rounded-t-lg object-cover"
-                width={400}
-                height={200}
-              />
-              <CardHeader>
-                <CardTitle className="truncate">{item.title}</CardTitle>
-                <CardDescription className="line-clamp-3">
-                  {item.description}
-                </CardDescription>
-              </CardHeader>
+        <>
+          <h1 className="mb-5 mt-10 text-2xl font-semibold">Recent Articles</h1>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-7">
+            {articles.map((item) => (
+              <Card key={item.id}>
+                <Image
+                  src={item.imageUrl ?? "/default.png"}
+                  alt={item.title}
+                  className="h-[200px] w-full rounded-t-lg object-cover"
+                  width={400}
+                  height={200}
+                />
+                <CardHeader>
+                  <CardTitle className="truncate">{item.title}</CardTitle>
+                  <CardDescription className="line-clamp-3">
+                    {item.description}
+                  </CardDescription>
+                </CardHeader>
 
-              <CardFooter>
-                <Button asChild className="w-full">
-                  <Link href={`/dashboard/sites/${item.siteId}/${item.id}`}>
-                    Edit Article
-                  </Link>
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
+                <CardFooter>
+                  <Button asChild className="w-full">
+                    <Link href={`/dashboard/sites/${item.siteId}/${item.id}`}>
+                      Edit Article
+                    </Link>
+                  </Button>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        </>
       ) : (
-        <EmptyState
-          title="You don't have any articles created"
-          description="Your currently don't have any articles created. Please create some so that you can see them right here"
-          buttonText="Create Article"
-          href="/dashboard/sites"
-        />
+        sites.length > 0 && (
+          <EmptyState
+            title="You don't have any articles created"
+            description="Your currently don't have any articles created. Please create some so that you can see them right here"
+            buttonText="Create Article"
+            href="/dashboard/sites"
+          />
+        )
       )}
     </div>
   );

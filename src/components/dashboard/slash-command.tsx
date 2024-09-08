@@ -8,6 +8,7 @@ import {
   ListOrdered,
   Text,
   TextQuote,
+  Minus,
 } from "lucide-react";
 import { Command, createSuggestionItems, renderItems } from "novel/extensions";
 
@@ -75,6 +76,15 @@ export const suggestionItems = createSuggestionItems([
         .deleteRange(range)
         .setNode("heading", { level: 3 })
         .run();
+    },
+  },
+  {
+    title: "Horizontal Line",
+    description: "Add a horizontal line.",
+    searchTerms: ["divider", "separator"],
+    icon: <Minus size={18} />,
+    command: ({ editor, range }) => {
+      editor.commands.setHorizontalRule();
     },
   },
   {

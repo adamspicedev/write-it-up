@@ -70,4 +70,8 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  .document li {
+    @apply marker:text-foreground;
+  }
 }

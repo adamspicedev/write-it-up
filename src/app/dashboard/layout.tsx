@@ -1,6 +1,6 @@
-import Logo from "@/components/dashboard/logo";
+import Logo from "@/components/shared/logo";
 import NavLink from "@/components/dashboard/nav-link";
-import { ThemeToggle } from "@/components/dashboard/theme-toggle";
+import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,

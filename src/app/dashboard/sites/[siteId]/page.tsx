@@ -98,7 +98,7 @@ const SiteIdPage = async ({ params }: SiteIdPageProps) => {
           title="You don't have any Articles yet"
           description="Create your first article to get started"
           buttonText="Create Article"
-          href={`/dashboard/sites/${params.siteId}/create`}
+          href={`/dashboard/sites/${params.siteId}/create-article`}
         />
       ) : (
         <div>
