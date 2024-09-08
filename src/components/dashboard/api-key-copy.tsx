@@ -3,15 +3,14 @@
 import React, { useState } from "react";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { Badge } from "../ui/badge";
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 
 const ApiKeyCopy = ({ apiKey }: { apiKey: string }) => {
-  const [copied, setCopied] = useState(false);
+  const { isCopied, copyToClipboard } = useCopyToClipboard();
   return (
     <div className="mt-10 flex flex-row gap-4">
-      <CopyToClipboard text={apiKey} onCopy={() => setCopied(true)}>
-        <span className="cursor-pointer">{apiKey}</span>
-      </CopyToClipboard>
-      {copied && (
+      <span className="cursor-pointer">{apiKey}</span>
+      {isCopied && (
         <Badge variant="outline" className="bg-success/10 text-success">
           Copied
         </Badge>
