@@ -1,7 +1,7 @@
 import prisma from "@/lib/db";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import Logo from "@/components/dashboard/logo";
+import Logo from "@/components/shared/logo";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import {
   Card,
