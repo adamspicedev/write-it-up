@@ -40,7 +40,7 @@ const EditArticlePage = async ({ params }: EditArticlePageProps) => {
     <div>
       <div className="flex items-center">
         <Button size="icon" variant="outline" asChild className="mr-3">
-          <Link href={`/dashboard/sites/${params.siteId}`}>
+          <Link href={`/dashboard/sites/${params?.siteId}`}>
             <ArrowLeft className="size-4" />
           </Link>
         </Button>

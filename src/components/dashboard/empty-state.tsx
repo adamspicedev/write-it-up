@@ -9,12 +9,12 @@ interface EmptyStateProps {
   href: string;
 }
 
-export function EmptyState({
+const EmptyState = ({
   buttonText,
   description,
   href,
   title,
-}: EmptyStateProps) {
+}: EmptyStateProps) => {
   return (
     <div className="flex flex-col items-center justify-center rounded-md border border-dashed p-8 text-center animate-in fade-in-50">
       <div className="flex size-20 items-center justify-center rounded-full bg-primary/10">
@@ -32,4 +32,6 @@ export function EmptyState({
       </Button>
     </div>
   );
-}
+};
+
+export default EmptyState;

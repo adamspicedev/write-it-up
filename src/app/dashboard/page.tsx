@@ -10,7 +10,7 @@ import {
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { EmptyState } from "@/components/dashboard/empty-state";
+import EmptyState from "@/components/dashboard/empty-state";
 
 const getData = async (userId: string) => {
   const [sites, articles] = await Promise.all([
