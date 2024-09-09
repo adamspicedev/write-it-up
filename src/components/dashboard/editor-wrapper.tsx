@@ -9,9 +9,11 @@ import {
   EditorRoot,
   JSONContent,
 } from "novel";
+import { handleCommandNavigation } from "novel/extensions";
 import { defaultExtensions } from "./editor-extensions";
 import { slashCommand, suggestionItems } from "./slash-command";
-import { handleCommandNavigation } from "novel/extensions";
+
+import hljs from "highlight.js";
 
 interface EditorWrapperProps {
   initialValue?: JSONContent;
@@ -20,6 +22,16 @@ interface EditorWrapperProps {
 
 const EditorWrapper = ({ initialValue, onChange }: EditorWrapperProps) => {
   const extensions = [...defaultExtensions, slashCommand];
+
+  const highlightCodeblocks = (content: string) => {
+    const doc = new DOMParser().parseFromString(content, "text/html");
+    doc.querySelectorAll("pre code").forEach((el) => {
+      // @ts-ignore
+      // https://highlightjs.readthedocs.io/en/latest/api.html?highlight=highlightElement#highlightelement
+      hljs.highlightElement(el);
+    });
+    return new XMLSerializer().serializeToString(doc);
+  };
 
   return (
     <EditorRoot>
@@ -38,6 +50,8 @@ const EditorWrapper = ({ initialValue, onChange }: EditorWrapperProps) => {
         initialContent={initialValue}
         onUpdate={({ editor }) => {
           const json = editor.getJSON();
+          const html = editor.getHTML();
+          highlightCodeblocks(html);
           onChange(json);
         }}
       >

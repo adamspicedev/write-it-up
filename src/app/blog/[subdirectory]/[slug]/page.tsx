@@ -49,7 +49,7 @@ export default async function SlugRoute({
       <div className="mb-10 flex flex-col items-center justify-center">
         <div className="m-auto w-full text-center md:w-7/12">
           <p className="m-auto my-5 w-10/12 text-sm font-light text-muted-foreground md:text-base">
-            {new Intl.DateTimeFormat("en-US", {
+            {new Intl.DateTimeFormat("en-NZ", {
               dateStyle: "medium",
             }).format(data.createdAt)}
           </p>

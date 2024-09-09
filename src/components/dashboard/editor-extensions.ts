@@ -5,10 +5,22 @@ import {
   HorizontalRule,
   StarterKit,
   Placeholder,
+  CodeBlockLowlight,
 } from "novel/extensions";
-
+import { createLowlight, all } from "lowlight";
 import { cx } from "class-variance-authority";
+import css from "highlight.js/lib/languages/css";
+import js from "highlight.js/lib/languages/javascript";
+import ts from "highlight.js/lib/languages/typescript";
+import html from "highlight.js/lib/languages/xml";
+import scala from "highlight.js/lib/languages/scala";
 
+const lowlight = createLowlight(all);
+lowlight.register("html", html);
+lowlight.register("css", css);
+lowlight.register("js", js);
+lowlight.register("ts", ts);
+lowlight.register("scala", scala);
 // TODO I am using cx here to get tailwind autocomplete working, idk if someone else can write a regex to just capture the class key in objects
 
 // You can overwrite the placeholder with your own configuration
@@ -19,6 +31,11 @@ const tiptapLink = TiptapLink.configure({
       "text-muted-foreground underline underline-offset-[3px] hover:text-primary transition-colors cursor-pointer",
     ),
   },
+});
+
+const codeblock = CodeBlockLowlight.configure({
+  defaultLanguage: "javascript",
+  lowlight,
 });
 
 const taskList = TaskList.configure({
@@ -65,12 +82,6 @@ const starterKit = StarterKit.configure({
       class: cx("rounded-sm bg-muted border p-5 font-mono font-medium"),
     },
   },
-  code: {
-    HTMLAttributes: {
-      class: cx("rounded-md bg-muted  px-1.5 py-1 font-mono font-medium"),
-      spellcheck: "false",
-    },
-  },
   horizontalRule: false,
   dropcursor: {
     color: "#DBEAFE",
@@ -86,4 +97,5 @@ export const defaultExtensions = [
   taskList,
   taskItem,
   horizontalRule,
+  codeblock,
 ];

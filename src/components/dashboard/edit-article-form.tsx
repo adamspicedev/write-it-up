@@ -1,6 +1,6 @@
 "use client";
 
-import { UploadDropzone } from "@/lib/upload-buttons";
+import { editArticleActions } from "@/actions/article-actions";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,21 +12,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Atom } from "lucide-react";
-import Image from "next/image";
-import EditorWrapper from "./editor-wrapper";
-import SubmitButton from "./submit-button";
-import { useActionState, useState } from "react";
-import { JSONContent } from "novel";
+import { useToast } from "@/hooks/use-toast";
+import { articleSchema } from "@/lib/schemas";
+import { UploadDropzone } from "@/lib/upload-buttons";
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
-import { articleSchema } from "@/lib/schemas";
-import {
-  createArticleAction,
-  editArticleActions,
-} from "@/actions/article-actions";
+import { Atom } from "lucide-react";
+import Image from "next/image";
+import { JSONContent } from "novel";
+import { useActionState, useState } from "react";
 import slugify from "react-slugify";
-import { useToast } from "@/hooks/use-toast";
+import EditorWrapper from "./editor-wrapper";
+import SubmitButton from "./submit-button";
 
 interface iAppProps {
   data: {

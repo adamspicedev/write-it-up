@@ -124,8 +124,10 @@ export const suggestionItems = createSuggestionItems([
     description: "Capture a code snippet.",
     searchTerms: ["codeblock"],
     icon: <Code size={18} />,
-    command: ({ editor, range }) =>
-      editor.chain().focus().deleteRange(range).toggleCodeBlock().run(),
+    command: ({ editor, range }) => {
+      editor.unregisterPlugin("starter-kit.code-block");
+      editor.chain().focus().deleteRange(range).toggleCodeBlock().run();
+    },
   },
 ]);
 
