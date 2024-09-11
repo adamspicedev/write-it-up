@@ -15,43 +15,70 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { articleSchema } from "@/lib/schemas";
 import { UploadDropzone } from "@/lib/upload-buttons";
+import { tagsAsOptions } from "@/lib/utils";
+import { useTagStore } from "@/store";
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
+import { Article, Tag } from "@prisma/client";
+import { JsonValue } from "@prisma/client/runtime/library";
 import { Atom } from "lucide-react";
 import Image from "next/image";
 import { JSONContent } from "novel";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import slugify from "react-slugify";
+import { MultiSelect } from "../multi-select";
 import EditorWrapper from "./editor-wrapper";
 import SubmitButton from "./submit-button";
 
-interface iAppProps {
-  data: {
-    slug: string;
-    title: string;
-    description: string;
-    content: any;
+interface EditArticleFormProps {
+  article: {
     id: string;
+    title: string;
+    content: JsonValue;
+    description: string;
     imageUrl: string;
+    slug: string;
+    tags: {
+      tag: {
+        id: string;
+        name: string;
+        createdAt: Date;
+        updatedAt: Date;
+      };
+    }[];
   };
+  tags: Tag[];
   siteId: string;
 }
 
-export function EditArticleForm({ data, siteId }: iAppProps) {
+export function EditArticleForm({
+  article,
+  tags,
+  siteId,
+}: EditArticleFormProps) {
+  const selectedTags = useTagStore((state) => state.selectedTags);
+  const setSelectedTags = useTagStore((state) => state.setSelectedTags);
+  const setGlobalTags = useTagStore((state) => state.setGlobalTags);
+
   const { toast } = useToast();
-  const [imageUrl, setImageUrl] = useState<undefined | string>(data.imageUrl);
-  const [value, setValue] = useState<JSONContent | undefined>(data.content);
-  const [slug, setSlug] = useState<undefined | string>(data.slug);
-  const [title, setTitle] = useState<undefined | string>(data.title);
+  const [imageUrl, setImageUrl] = useState<undefined | string>(
+    article.imageUrl,
+  );
+  const [value, setValue] = useState<JSONContent | undefined>(
+    article.content as JSONContent,
+  );
+  const [slug, setSlug] = useState<undefined | string>(article.slug);
+  const [title, setTitle] = useState<undefined | string>(article.title);
 
   const [lastResult, action] = useActionState(editArticleActions, undefined);
   const [form, fields] = useForm({
     lastResult,
-
     onValidate({ formData }) {
-      return parseWithZod(formData, { schema: articleSchema });
-    },
+      const isValid = parseWithZod(formData, { schema: articleSchema });
+      console.log(isValid);
 
+      return isValid;
+    },
     shouldValidate: "onBlur",
     shouldRevalidate: "onInput",
   });
@@ -71,6 +98,12 @@ export function EditArticleForm({ data, siteId }: iAppProps) {
       description: "Slug has been created",
     });
   };
+
+  useEffect(() => {
+    setSelectedTags(article.tags);
+    setGlobalTags(tags);
+  }, [article.tags, tags]);
+  console.log("tag fields", fields.tags.value);
   return (
     <Card className="mt-5">
       <CardHeader>
@@ -86,7 +119,7 @@ export function EditArticleForm({ data, siteId }: iAppProps) {
           onSubmit={form.onSubmit}
           action={action}
         >
-          <input type="hidden" name="articleId" value={data.id} />
+          <input type="hidden" name="articleId" value={article.id} />
           <input type="hidden" name="siteId" value={siteId} />
           <div className="grid gap-2">
             <Label>Title</Label>
@@ -127,7 +160,7 @@ export function EditArticleForm({ data, siteId }: iAppProps) {
             <Textarea
               key={fields.description.key}
               name={fields.description.name}
-              defaultValue={data.description}
+              defaultValue={article.description}
               placeholder="Small Description for your blog article..."
               className="h-32"
             />
@@ -188,8 +221,42 @@ export function EditArticleForm({ data, siteId }: iAppProps) {
             <EditorWrapper onChange={setValue} initialValue={value} />
             <p className="text-sm text-red-500">{fields.content.errors}</p>
           </div>
+          <div className="grid gap-2">
+            <input
+              type="hidden"
+              name={fields.tags.name}
+              key={fields.tags.key}
+              defaultValue={
+                Array.isArray(fields.tags.initialValue)
+                  ? fields.tags.initialValue
+                  : []
+              }
+              value={JSON.stringify(selectedTags)}
+            />
+            <Label>Tags</Label>
+            <MultiSelect
+              options={tagsAsOptions(tags)}
+              onValueChange={(tagNames) => {
+                const newTags: { tag: Tag }[] = [];
+                tagNames.forEach((tagName) => {
+                  const tag = tags.find((tag) => tag.name === tagName);
+                  if (tag) {
+                    newTags.push({ tag });
+                  }
+                });
+                setSelectedTags(newTags);
+              }}
+              defaultValue={selectedTags.map((tag) => tag.name)}
+              value={selectedTags.map((tag) => tag.name)}
+              placeholder="Select Tags"
+              variant="inverted"
+              animation={2}
+              maxCount={3}
+            />
+            <p className="text-sm text-red-500">{fields.tags.errors}</p>
+          </div>
 
-          <SubmitButton text="Edit Article" />
+          <SubmitButton text="Update Article" />
         </form>
       </CardContent>
     </Card>

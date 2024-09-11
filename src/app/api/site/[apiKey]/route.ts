@@ -21,7 +21,21 @@ export async function GET(
     const articles = await prisma.site.findUnique({
       where: { apiKey: apiKey as string },
       select: {
-        articles: true,
+        articles: {
+          select: {
+            title: true,
+            description: true,
+            imageUrl: true,
+            slug: true,
+            content: true,
+            id: true,
+            tags: {
+              select: {
+                tag: true,
+              },
+            },
+          },
+        },
       },
     });
 

@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 
 interface SubmitButtonsProps {
+  name?: string;
+  value?: string;
   text: string;
   className?: string;
   variant?:
@@ -19,16 +21,34 @@ interface SubmitButtonsProps {
     | undefined;
 }
 
-const SubmitButton = ({ text, className, variant }: SubmitButtonsProps) => {
+const SubmitButton = ({
+  name,
+  value,
+  text,
+  className,
+  variant,
+}: SubmitButtonsProps) => {
   const { pending } = useFormStatus();
 
   return pending ? (
-    <Button disabled className={cn("w-fit", className)} variant={variant}>
+    <Button
+      name={name}
+      value={value}
+      disabled
+      className={cn("w-fit", className)}
+      variant={variant}
+    >
       <Loader2 className="mr-2 size-4 animate-spin" />
       Please Wait...
     </Button>
   ) : (
-    <Button className={cn("w-fit", className)} variant={variant} type="submit">
+    <Button
+      name={name}
+      value={value}
+      className={cn("w-fit", className)}
+      variant={variant}
+      type="submit"
+    >
       {text}
     </Button>
   );

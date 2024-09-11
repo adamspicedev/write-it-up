@@ -1,6 +1,3 @@
-import { JsonValue } from "@prisma/client/runtime/library";
-import { JSONContent } from "novel";
-import { title } from "process";
 import { z } from "zod";
 
 export const siteSchema = z.object({
@@ -15,4 +12,9 @@ export const articleSchema = z.object({
   imageUrl: z.string().min(1),
   description: z.string().min(1).max(200),
   content: z.string().min(1),
+  tags: z.string().optional(),
+});
+
+export const tagSchema = z.object({
+  name: z.string().min(1).max(15),
 });

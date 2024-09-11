@@ -5,6 +5,7 @@ import { articleSchema } from "@/lib/schemas";
 import { requireUser } from "@/app/require-user";
 import { parseWithZod } from "@conform-to/zod";
 import { redirect } from "next/navigation";
+import { Tag } from "@prisma/client";
 
 export const createArticleAction = async (_: any, formData: FormData) => {
   const user = await requireUser();
@@ -31,7 +32,7 @@ export const createArticleAction = async (_: any, formData: FormData) => {
 
 export async function editArticleActions(prevState: any, formData: FormData) {
   const user = await requireUser();
-
+  console.log("running`");
   const submission = parseWithZod(formData, {
     schema: articleSchema,
   });
@@ -40,10 +41,13 @@ export async function editArticleActions(prevState: any, formData: FormData) {
     return submission.reply();
   }
 
+  const tags: Tag[] = JSON.parse(submission.value.tags!);
+  const articleId = formData.get("articleId") as string;
+
   const data = await prisma.article.update({
     where: {
       userId: user.id,
-      id: formData.get("articleId") as string,
+      id: articleId,
     },
     data: {
       title: submission.value.title,
@@ -51,6 +55,23 @@ export async function editArticleActions(prevState: any, formData: FormData) {
       slug: submission.value.slug,
       content: JSON.parse(submission.value.content),
       imageUrl: submission.value.imageUrl,
+      tags: {
+        connectOrCreate: tags.map((tag) => ({
+          where: {
+            articleId_tagId: {
+              articleId: articleId,
+              tagId: tag.id,
+            },
+          },
+          create: {
+            tag: {
+              connect: {
+                id: tag.id,
+              },
+            },
+          },
+        })),
+      },
     },
   });
 

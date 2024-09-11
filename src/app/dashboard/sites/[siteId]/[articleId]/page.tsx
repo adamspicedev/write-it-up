@@ -5,26 +5,34 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-async function getData(postId: string) {
-  const data = await prisma.article.findUnique({
-    where: {
-      id: postId,
-    },
-    select: {
-      imageUrl: true,
-      title: true,
-      description: true,
-      slug: true,
-      content: true,
-      id: true,
-    },
-  });
+async function getData(articleId: string) {
+  const [article, tags] = await Promise.all([
+    prisma.article.findUnique({
+      where: {
+        id: articleId,
+      },
+      select: {
+        imageUrl: true,
+        title: true,
+        description: true,
+        slug: true,
+        content: true,
+        id: true,
+        tags: {
+          select: {
+            tag: true,
+          },
+        },
+      },
+    }),
+    await prisma.tag.findMany(),
+  ]);
 
-  if (!data) {
+  if (!article) {
     return notFound();
   }
 
-  return data;
+  return { article, tags };
 }
 
 interface EditArticlePageProps {
@@ -35,7 +43,8 @@ interface EditArticlePageProps {
 }
 
 const EditArticlePage = async ({ params }: EditArticlePageProps) => {
-  const data = await getData(params.articleId);
+  const { article, tags } = await getData(params.articleId);
+
   return (
     <div>
       <div className="flex items-center">
@@ -47,7 +56,7 @@ const EditArticlePage = async ({ params }: EditArticlePageProps) => {
         <h1 className="text-2xl font-semibold">Edit Article</h1>
       </div>
 
-      <EditArticleForm data={data} siteId={params.siteId} />
+      <EditArticleForm article={article} tags={tags} siteId={params.siteId} />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { DollarSign, Globe, HomeIcon } from "lucide-react";
+import { DollarSign, Globe, HomeIcon, TagIcon } from "lucide-react";
 import { NavLink } from "./types";
 import React from "react";
 
@@ -9,6 +9,7 @@ export const navLinks: NavLink[] = [
     icon: React.createElement(HomeIcon),
   },
   { name: "Sites", href: "/dashboard/sites", icon: React.createElement(Globe) },
+  { name: "Tags", href: "/dashboard/tags", icon: React.createElement(TagIcon) },
   {
     name: "Pricing",
     href: "/dashboard/pricing",

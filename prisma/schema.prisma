@@ -51,16 +51,17 @@ model Site {
 }
 
 model Article {
-  id          String @id @default(uuid())
+  id          String        @id @default(uuid())
   title       String
   content     Json
   description String
   imageUrl    String
-  slug        String @unique
+  slug        String        @unique
   siteId      String
-  site        Site   @relation(fields: [siteId], references: [id])
+  site        Site          @relation(fields: [siteId], references: [id])
   userId      String
-  user        User   @relation(fields: [userId], references: [id])
+  user        User          @relation(fields: [userId], references: [id])
+  tags        ArticleTags[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -78,4 +79,22 @@ model Subscription {
 
   User   User?   @relation(fields: [userId], references: [id])
   userId String? @unique
+}
+
+model Tag {
+  id   String @id @default(uuid())
+  name String @unique
+
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  articles  ArticleTags[]
+}
+
+model ArticleTags {
+  articleId String
+  tagId     String
+  article   Article @relation(fields: [articleId], references: [id])
+  tag       Tag     @relation(fields: [tagId], references: [id])
+
+  @@id([articleId, tagId])
 }

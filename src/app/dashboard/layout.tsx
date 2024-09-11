@@ -1,5 +1,5 @@
-import Logo from "@/components/shared/logo";
 import NavLink from "@/components/dashboard/nav-link";
+import Logo from "@/components/shared/logo";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,7 +11,6 @@ import {
 import { navLinks } from "@/lib/data";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { CircleUser } from "lucide-react";
-import Link from "next/link";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -53,6 +52,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             </DropdownMenu>
           </div>
         </header>
+
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
           {children}
         </main>

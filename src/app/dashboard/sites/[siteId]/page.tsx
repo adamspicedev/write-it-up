@@ -132,7 +132,11 @@ const SiteIdPage = async ({ params }: SiteIdPageProps) => {
                         />
                       </TableCell>
                       <TableCell className="font-medium">
-                        {article.title}
+                        <Link
+                          href={`/dashboard/sites/${params.siteId}/${article.id}`}
+                        >
+                          {article.title}
+                        </Link>
                       </TableCell>
                       <TableCell>
                         <Badge
